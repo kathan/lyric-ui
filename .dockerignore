@@ -1,0 +1,8 @@
+### node stuff
+node_modules/
+
+### git
+.git
+.gitignore
+
+/build
