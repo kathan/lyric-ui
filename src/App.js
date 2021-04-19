@@ -11,16 +11,14 @@ class App extends React.Component{
 
     render(){
         const { setlists } = this.state;
-        if(Array.isArray(setlists)){
-            return (
-                <ul>
-                {setlists.map(setlist => {
-                    return this.renderSetlist(setlist);
-                })}
-                </ul>
-            );
-        }
-        return <div>No setlists</div>;
+        return (
+            <ul>
+                <li>All Songs</li>
+            {setlists.map(setlist => {
+                return this.renderSetlist(setlist);
+            })}
+            </ul>
+        );
     }
 
     renderSetlist = setlist => <li>{setlist.name}</li>;

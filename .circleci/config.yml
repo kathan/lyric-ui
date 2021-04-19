@@ -20,7 +20,7 @@ jobs:
           name: Build static files for React App and Deploy to S3
           command: |
             npm run build
-            aws s3 sync ./build s3://lyric-lab-static-site-s3 --delete
+            aws s3 sync ./build s3://lyric-lab-static-site-s3 --delete --acl public-read
 workflows:
   build_and_deploy:
     jobs:
