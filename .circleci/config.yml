@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.6
+
+jobs:
+  build:
+    docker:
+      - image: node
+
+    steps:
+      - checkout
+      - run:
+          command: npm i
+          name: Install
+      - run:
+          command: npm run build
+          name: React Build
+      - aws-s3/sync:
+          from: ./build
+          to: 's3://lyric-lab-static-site-s3'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400" \
+            --exclude ".git/*" \
+            --exclude ".gitignore" \
+            --exclude ".circleci/*" \
+          overwrite: true
