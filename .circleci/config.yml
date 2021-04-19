@@ -10,6 +10,9 @@ jobs:
     steps:
       - checkout
       - run:
+          command: npm i pip
+          name: Install
+      - run:
           command: npm i
           name: Install
       - run:
