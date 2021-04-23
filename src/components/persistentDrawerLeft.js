@@ -15,7 +15,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SetlistItem from './setlistItem';
 import AddIcon from '@material-ui/icons/Add';
 import SetlistService from '../services/setlists';
-import FormDialog from './formDialog';
+import NewSetlistModal from './newSetlistModal';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -112,24 +112,18 @@ export default function PersistentDrawerLeft(props) {
       name: event.target.elements.name.value
     };
     const newSetList = await SetlistService.saveSetlist(setlist);
-    
+
     handleNewSetlistClose();
   };
 
-  const getNewSetlistModal = () => {
-    return (
-      <FormDialog
+  return (
+    <div className={classes.root}>
+      <NewSetlistModal
         handleSave={saveSetlist}
         handleClose={handleNewSetlistClose}
         open={newSetlistOpen}
       >
-      </FormDialog>);
-  }
-  const modal = getNewSetlistModal();
-  
-  return (
-    <div className={classes.root}>
-      {modal}
+      </NewSetlistModal>
       <CssBaseline />
       <AppBar
         position="fixed"
