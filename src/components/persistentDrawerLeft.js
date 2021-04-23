@@ -14,24 +14,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import SetlistItem from './setlistItem';
 import AddIcon from '@material-ui/icons/Add';
-// import Modal from '@material-ui/core/Modal';
-// import TextField from '@material-ui/core/TextField';
 import SetlistService from '../services/setlists';
 import FormDialog from './formDialog';
 
 const drawerWidth = 240;
-
-// function getModalStyle() {
-//   const top = 50;
-//   const left = 50;
-
-//   return {
-//     top: `${top}%`,
-//     left: `${left}%`,
-//     transform: `translate(-${top}%, -${left}%)`,
-//   };
-// }
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -120,14 +106,21 @@ export default function PersistentDrawerLeft(props) {
     setNewSetlistOpen(false);
   };
 
-  const saveSetlist = (setlist) => {
-    SetlistService.saveSetlist(setlist);
+  const saveSetlist = async (event) => {
+    event.preventDefault();
+    const setlist = {
+      name: event.target.elements.name.value
+    };
+    const newSetList = await SetlistService.saveSetlist(setlist);
+    
+    handleNewSetlistClose();
   };
 
   const getNewSetlistModal = () => {
     return (
       <FormDialog
         handleSave={saveSetlist}
+        handleClose={handleNewSetlistClose}
         open={newSetlistOpen}
       >
       </FormDialog>);
@@ -178,6 +171,9 @@ export default function PersistentDrawerLeft(props) {
           </IconButton>
         </div>
         <Divider />
+        <Typography variant="h6" className={classes.title}>
+          Setlists
+        </Typography>
         <List>
           {setlists.map(setlist => (
             <SetlistItem 

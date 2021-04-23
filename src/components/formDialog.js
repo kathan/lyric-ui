@@ -7,34 +7,33 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function FormDialog(props) {
-  const [open, setOpen] = React.useState(props.open);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const { handleClose, handleSave } = props;
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">New Setlist</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Name"
-            type="text"
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={props.handleSave} color="primary">
-            Save
-          </Button>
-        </DialogActions>
+        <form onSubmit={handleSave}>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Name"
+              type="text"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <input type="submit" value="Save" />
+            <Button onClick={handleSave} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </div>
   );
