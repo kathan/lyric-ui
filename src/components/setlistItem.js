@@ -3,15 +3,25 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Link from '@material-ui/core/Link';
 
-export default function SetlistItem(props){
-    const { setlist } = props;
-    const link = `#setlist/${setlist.id}`;
+class SetlistItem extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = props;
+        this.setlist = props.setlist;
+        this.link = `#setlist/${this.setlist.id}`;
+    }
 
-    return (
-        <ListItem>
-            <Link href={link}>
-                <ListItemText primary={setlist.name} />
-            </Link>
-        </ListItem>
-    )
+    render(){
+        const {handleSongDrawerOpen} = this.state;
+
+        return (
+            <ListItem>
+                <Link href={this.link} onClick={handleSongDrawerOpen()}>
+                    <ListItemText primary={this.setlist.name} />
+                </Link>
+            </ListItem>
+        );
+    }
 };
+
+export default SetlistItem;

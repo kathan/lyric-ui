@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField} from '@material-ui/core';
 
-export default function NewSetlistModal(props) {
+export default function newSongModal(props) {
   const { handleClose, handleSave } = props;
 
   return (
     <div>
       <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">New Setlist</DialogTitle>
+        <DialogTitle id="form-dialog-title">New Song</DialogTitle>
         <form onSubmit={handleSave}>
           <DialogContent>
             <TextField
