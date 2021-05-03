@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   deploy_react:
     docker: 
-      - image: node
+      - image: node:14.16.1
 
     steps:
       - checkout
