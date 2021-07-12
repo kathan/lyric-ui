@@ -26,6 +26,7 @@ const PAGE = {
   SETLISTS: 'SETLISTS',
   SONGS: 'SONGS',
   SONG: 'SONG',
+  SONG_EDIT: 'SONG_EDIT' 
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +59,54 @@ export default function ClippedDrawer() {
     const [page, setPage] = useState(PAGE.SETLISTS);
     const [setlist, setSetlist] = useState();
     const [songs, setSongs] = useState();
+    const [song, setSong] = useState();
+
+    const getPage = () => {
+      let currentPage;
+      switch(page) { 
+        case PAGE.SONGS:
+          currentPage = (
+          <SongsPage
+            setlist={setlist}
+            onClickSong={song => {
+              setSong(song);
+              setPage(PAGE.SONG);
+            }}
+          />)
+          break;
+        case PAGE.SETLISTS:
+          currentPage = (
+          <SetlistsPage
+            onClickSetlist={setlist => {
+              setSetlist(setlist);
+              setSongs(setlist.Songs);
+              setPage(PAGE.SONGS);
+            }}
+          />)
+          break;
+        case PAGE.SONG:
+          currentPage = (
+            <SongPage
+              onClickSetlist={setlist => {
+                setSetlist(setlist);
+                setSongs(setlist.Songs);
+                setPage(PAGE.SONGS);
+              }}
+            />)
+          break;
+          case PAGE.SONG_EDIT:
+            currentPage = (
+              <SongEdit
+                onClickSetlist={setlist => {
+                  setSetlist(setlist);
+                  setSongs(setlist.Songs);
+                  setPage(PAGE.SONGS);
+                }}
+              />)
+            break;
+          }
+          return currentPage;
+    }
 
     return (
       <div className={classes.root}>
@@ -86,52 +135,8 @@ export default function ClippedDrawer() {
             </BottomNavigation>
           </Toolbar>
         </AppBar>
-        {/* <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={true}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <Toolbar />
-          <div className={classes.drawerContainer}>
-            <List>
-              {setlists.map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
-            </List>
-          </div>
-        </Drawer> */}
         <main className={classes.content}>
-          {/* <Toolbar />
-          <Typography paragraph>
-            Bopo
-          </Typography>
-          <Typography paragraph>
-            hoo
-          </Typography> */}
-          { page === PAGE.SONGS ?
-          <SongsPage
-            songs={songs}
-            setlistId={setlist.id}
-            onClickSong={song => {
-              setSong(song);
-              setPage(PAGE.SONG);
-            }}
-          /> :
-          <SetlistsPage
-            onClickSetlist={setlist => {
-              setSetlist(setlist);
-              setSongs(setlist.Songs);
-              setPage(PAGE.SONGS);
-            }}
-          />}
-
+          {getPage()}
         </main>
         <BottomNavigation/>
       </div>
