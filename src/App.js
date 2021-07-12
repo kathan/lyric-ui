@@ -1,5 +1,5 @@
 import React from 'react';
-import NavigationDrawer from './components/NavigationDrawer';
+import NavigationWrapper from './components/NavigationWrapper';
 
 class App extends React.Component{
     constructor(props) {
@@ -9,7 +9,7 @@ class App extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <NavigationDrawer/>
+                <NavigationWrapper/>
             </React.Fragment>
         );
     }

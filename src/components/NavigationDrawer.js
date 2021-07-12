@@ -12,11 +12,12 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import SetlistItem from './setlistItem';
+import SetlistItem from './SetlistItem';
 import AddIcon from '@material-ui/icons/Add';
 import SetlistService from '../services/setlists';
-import NewSetlistModal from './newSetlistModal';
+import NewSetlistModal from './NewSetlistModal';
 import SongDrawer from './SongDrawer';
+import SetlistSelect from './SetlistSelect';
 
 const drawerWidth = '100%';
 const styles = theme => ({
@@ -108,7 +109,6 @@ class NavigationDrawer extends React.Component {
       songDrawerOpen: true,
       setlistDrawerOpen: false,
     });
-    // this.render();
   };
 
   handleSongDrawerClose(){
@@ -168,8 +168,6 @@ class NavigationDrawer extends React.Component {
       classes,
       setlistDrawerOpen,
       newSetlistOpen,
-      selectedSetlist,
-      setlists 
     } =  this.state;
 
     return (
@@ -202,55 +200,13 @@ class NavigationDrawer extends React.Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        {/* Setlist drawer */}
-        <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={setlistDrawerOpen}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <div className={classes.drawerHeader}>
-            <Typography variant="h6">
-              Setlists
-            </Typography>
-            <IconButton onClick={this.handleNewSetlistOpen.bind(this)}>
-              <AddIcon/>
-            </IconButton>
-            <IconButton onClick={this.handleSetlistDrawerClose.bind(this)}>
-              {classes.theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-            </IconButton>
-          </div>
-          <Divider />
-        
-          <List>
-            {setlists.map(setlist => (
-              <SetlistItem 
-                setlist={setlist}
-                key={setlist.id}
-                handleSongDrawerOpen={() => this.handleSongDrawerOpen.bind(this, setlist)}
-              />
-            ))}
-          </List>
-        </Drawer>
         <SongDrawer
-          open={() => this.state.songDrawerOpen}
+          open={() => true}
           handleOpen={this.handleSongDrawerOpen.bind(this)}
           handleClose={this.handleSongDrawerClose.bind(this)}
           getSelectedSetlist={() => this.state.selectedSetlist}
           classes={classes}
-        ></SongDrawer>
-        {/* <main
-          className={clsx(classes.content, {
-            [classes.contentShift]: setListDrawerOpen,
-          })}
-        >
-          <div className={classes.drawerHeader} />
-          <Typography paragraph>
-          </Typography>
-        </main> */}
+        />
         </div> 
     );
   }

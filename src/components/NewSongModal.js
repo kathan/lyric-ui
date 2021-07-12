@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField} from '@material-ui/core';
 
-export default function newSongModal(props) {
+export default function NewSongModal(props) {
   const { handleClose, handleSave } = props;
 
   return (
