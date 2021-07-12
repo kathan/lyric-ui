@@ -18,7 +18,7 @@ import ListIcon from '@material-ui/icons/List';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import SongsPage from './SongsPage';
 import SetlistsPage from './SetlistsPage';
-
+import SongPage from './SongPage';
 
 const drawerWidth = 240;
 
@@ -87,10 +87,10 @@ export default function ClippedDrawer() {
         case PAGE.SONG:
           currentPage = (
             <SongPage
-              onClickSetlist={setlist => {
-                setSetlist(setlist);
-                setSongs(setlist.Songs);
-                setPage(PAGE.SONGS);
+              song={song}
+              onClickSetlist={song => {
+                setSong(song);
+                setPage(PAGE.SONG);
               }}
             />)
           break;

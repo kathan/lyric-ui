@@ -1,17 +1,13 @@
 import React from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Link from '@material-ui/core/Link';
+import ReactDOM from 'react-dom';
 
 export default function SongPage(props){
     const { song } = props;
-    const link = `#song/${song.id}`;
 
     return (
-        <ListItem>
-            <Link href={link}>
-                <ListItemText primary={song.name} />
-            </Link>
-        </ListItem>
+        <div>
+            <h2>{song.title}</h2>
+            <div dangerouslySetInnerHTML={{__html: song.lyrics}}></div>
+        </div>
     )
 };

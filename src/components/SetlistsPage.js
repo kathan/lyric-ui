@@ -34,13 +34,16 @@ class SetlistsPage extends React.Component{
             setlists,
             onClickSetlist
         } = this.state;
+
         return (
             <div>
                 <h2>Setlists</h2>
                 <List>
                 {setlists.map(setlist => (
                     <ListItem onClick={() => onClickSetlist(setlist)}>
-                        <ListItemText primary={setlist.name} />
+                        <Link href={`#setlist/${setlist.id}`}>
+                            <ListItemText primary={setlist.name} />
+                        </Link>
                     </ListItem>
                 ))}
                 </List>

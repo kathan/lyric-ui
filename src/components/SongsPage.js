@@ -3,6 +3,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Link from '@material-ui/core/Link';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import { CardHeader } from '@material-ui/core';
@@ -11,11 +12,13 @@ export default function SongsPage( { onClickSong, setlist }) {
     const allSongs = setlist.Songs;
     const [ songs, setSongs ] = useState(allSongs); 
     let filteredSongs = allSongs;
+
     const filter = e => {
         const filterValue = e.target.value;
-        filteredSongs = allSongs.filter(song => song.name.includes(filterValue));
+        filteredSongs = allSongs.filter(song => song.title.toLowerCase().includes(filterValue));
         setSongs(filteredSongs);
     };
+
     return (
         <div>
             <CardHeader title={setlist.name+" Songs"} />
@@ -23,7 +26,9 @@ export default function SongsPage( { onClickSong, setlist }) {
             <List>
             {songs.length > 0 ? songs.map(song => (
                 <ListItem onClick={() => onClickSong(song)}>
-                    <ListItemText primary={song.name} />
+                    <Link href={`#song/${song.id}`}>
+                        <ListItemText primary={song.title} />
+                    </Link>
                     <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="add">
                             <AddIcon />
