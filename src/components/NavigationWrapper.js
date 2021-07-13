@@ -60,7 +60,7 @@ export default function ClippedDrawer() {
     const [setlist, setSetlist] = useState();
     const [songs, setSongs] = useState();
     const [song, setSong] = useState();
-
+    
     const getPage = () => {
       let currentPage;
       switch(page) { 
@@ -68,6 +68,7 @@ export default function ClippedDrawer() {
           currentPage = (
           <SongsPage
             setlist={setlist}
+            songs={songs}
             onClickSong={song => {
               setSong(song);
               setPage(PAGE.SONG);
@@ -78,8 +79,19 @@ export default function ClippedDrawer() {
           currentPage = (
           <SetlistsPage
             onClickSetlist={setlist => {
-              setSetlist(setlist);
-              setSongs(setlist.Songs);
+              let songs;
+              let selectedSetlist;
+              if(setlist){
+                songs = setlist.Songs
+                selectedSetlist = setlist;
+              }else{
+                selectedSetlist = {
+                  name: "All Songs"
+                }
+                songs = allSongs;
+              }
+              setSetlist(selectedSetlist);
+              setSongs(songs);
               setPage(PAGE.SONGS);
             }}
           />)

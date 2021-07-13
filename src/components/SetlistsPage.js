@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import SetlistService from '../services/setlists';
 import React from 'react';
 import List from '@material-ui/core/List';
+import SongService from '../services/songs';
 
 
 class SetlistsPage extends React.Component{
@@ -21,12 +22,27 @@ class SetlistsPage extends React.Component{
     }
   
     componentDidMount(){
-        this.getSetlists()
-            .then(setlistResponse => {
-                this.setState({
-                    setlists: setlistResponse.data.setlists
+        
+        if(this.state.allSongs === undefined){
+            SongService.getAllSongs()
+            .then(songsResponse => {
+              this.setState({
+                    allSongs: {
+                          id: "",
+                          name: "All Songs",
+                          Songs: songsResponse.data.songs
+                    }
                 });
-            });
+            })
+            .then(() => {
+                this.getSetlists()
+                    .then(setlistResponse => {
+                        this.setState({
+                            setlists: [this.state.allSongs, ...setlistResponse.data.setlists]
+                        });
+                    });
+            })
+        }
     }
 
     render(){

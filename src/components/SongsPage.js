@@ -8,9 +8,8 @@ import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import { CardHeader } from '@material-ui/core';
 
-export default function SongsPage( { onClickSong, setlist }) {
-    const allSongs = setlist.Songs;
-    const [ songs, setSongs ] = useState(allSongs); 
+export default function SongsPage( { onClickSong, setlist, songs }) {
+    const [ allSongs, setSongs ] = useState(songs); 
     let filteredSongs = allSongs;
 
     const filter = e => {
