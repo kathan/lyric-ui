@@ -6,11 +6,47 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Link from '@material-ui/core/Link';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
-import { CardHeader } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import ArrowLeft from '@material-ui/icons/ArrowLeft';
 
-export default function SongsPage( { onClickSong, setlist, songs }) {
-    const [ allSongs, setSongs ] = useState(songs); 
-    let filteredSongs = allSongs;
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    appBar: {
+        [theme.breakpoints.up('sm')]: {
+          width: "100%",
+        },
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up('sm')]: {
+          display: 'none',
+        },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        // paddingTop: "50px"
+    },
+    search: {
+        background: "white",
+        paddingLeft: "6px",
+    }
+}));
+
+export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) {
+    const classes = useStyles();
+    const [ songs, setSongs ] = useState(setlist.Songs); 
+    let filteredSongs = setlist.Songs;
 
     const filter = e => {
         const filterValue = e.target.value;
@@ -19,26 +55,50 @@ export default function SongsPage( { onClickSong, setlist, songs }) {
     };
 
     return (
-        <div>
-            <CardHeader title={setlist.name+" Songs"} />
-            <input type="text" onKeyUp={filter}/>
-            <List>
-            {songs.length > 0 ? songs.map(song => (
-                <ListItem onClick={() => onClickSong(song)}>
-                    <Link href={`#song/${song.id}`}>
-                        <ListItemText primary={song.title} />
-                    </Link>
-                    <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="add">
-                            <AddIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-            )) : 
-                <ListItem>
-                    <ListItemText primary="No Songs" />
-                </ListItem>}
-            </List>
+        <div className={classes.root}>
+            <CssBaseline />
+            <AppBar position="fixed" className={classes.appBar}>
+                <Toolbar>
+                    <IconButton 
+                        edge="start" 
+                        aria-label="back"
+                        
+                    >
+                        <ArrowLeft onClick={selectSetlistPage}/>
+                    </IconButton>
+                    <Typography variant="h6" noWrap>
+                        {setlist.name+" Songs"}
+                    </Typography>
+                    <TextField
+                        color="primary"
+                        id="filled-search"
+                        label="Search" 
+                        variant="outlined"
+                        onChange={filter}
+                    />
+                </Toolbar>
+                {/* <input type="text" /> */}
+            </AppBar>
+            <main className={classes.content}>
+                <List>
+                {songs.length > 0 ? songs.map(song => (
+                    <ListItem onClick={() => onClickSong(song)}>
+                        
+                        <Link href={`#song/${song.id}`}>
+                            <ListItemText primary={song.title} />
+                        </Link>
+                        <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="add">
+                                <AddIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                )) : 
+                    <ListItem>
+                        <ListItemText primary="No Songs" />
+                    </ListItem>}
+                </List>
+            </main>
         </div>
     )
 }

@@ -1,26 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useState, useEffect } from 'react';
-import Drawer from '@material-ui/core/Drawer';
+import { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import ListIcon from '@material-ui/icons/List';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import SongsPage from './SongsPage';
 import SetlistsPage from './SetlistsPage';
 import SongPage from './SongPage';
-
-const drawerWidth = 240;
 
 const PAGE = {
   SETLISTS: 'SETLISTS',
@@ -38,19 +28,10 @@ const useStyles = makeStyles((theme) => ({
     top: 'auto',
     bottom: 0,
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerContainer: {
-    overflow: 'auto',
-  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    // paddingTop: "50px"
   },
 }));
 
@@ -60,46 +41,55 @@ export default function ClippedDrawer() {
     const [setlist, setSetlist] = useState();
     const [songs, setSongs] = useState();
     const [song, setSong] = useState();
-    
+
+    const selectSetlist = setlist => {
+      let selectedSetlist;
+      if(setlist){
+        selectedSetlist = setlist;
+      }else{
+        selectedSetlist = {
+          id: "",
+          name: "All Songs",
+          Songs: allSongs
+        }
+      }
+      setSetlist(selectedSetlist);
+      setPage(PAGE.SONGS);
+    }
+
+    const selectSetlistPage = () =>{
+      setPage(PAGE.SETLISTS);
+    }
+
+    const onClickSong = song =>{
+      setSong(song);
+      setPage(PAGE.SONG);
+    }
+
     const getPage = () => {
       let currentPage;
       switch(page) { 
         case PAGE.SONGS:
           currentPage = (
           <SongsPage
+            selectSetlistPage={selectSetlistPage}
             setlist={setlist}
             songs={songs}
-            onClickSong={song => {
-              setSong(song);
-              setPage(PAGE.SONG);
-            }}
+            onClickSong={onClickSong}
           />)
           break;
         case PAGE.SETLISTS:
           currentPage = (
           <SetlistsPage
-            onClickSetlist={setlist => {
-              let songs;
-              let selectedSetlist;
-              if(setlist){
-                songs = setlist.Songs
-                selectedSetlist = setlist;
-              }else{
-                selectedSetlist = {
-                  name: "All Songs"
-                }
-                songs = allSongs;
-              }
-              setSetlist(selectedSetlist);
-              setSongs(songs);
-              setPage(PAGE.SONGS);
-            }}
+            onClickSetlist={selectSetlist}
           />)
           break;
         case PAGE.SONG:
           currentPage = (
             <SongPage
+              setSetlist={selectSetlist}
               song={song}
+              setlist={setlist}
               onClickSetlist={song => {
                 setSong(song);
                 setPage(PAGE.SONG);
@@ -127,6 +117,7 @@ export default function ClippedDrawer() {
           <Toolbar>
             <BottomNavigation
               position="fixed"
+              color="inherit"
               // value={page}
               onChange={(event, newValue) => {
                 setPage(newValue);
@@ -137,13 +128,15 @@ export default function ClippedDrawer() {
               <BottomNavigationAction 
                 label="Setlists" 
                 value={PAGE.SETLISTS} 
-                icon={<ListIcon />} 
+                icon={<ListIcon color="inherit"/>} 
+                color="inherit"
               />
               <BottomNavigationAction 
                 label="Songs" 
                 value={PAGE.SONGS} 
-                icon={<MusicNoteIcon 
-              />} />
+                icon={<MusicNoteIcon color="inherit"/>}
+                color="inherit"
+              />
             </BottomNavigation>
           </Toolbar>
         </AppBar>

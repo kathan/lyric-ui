@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import SongItem from './SongItem';
 import { IconButton, Typography, Drawer, Divider, List } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
