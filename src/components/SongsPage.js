@@ -38,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
         // paddingTop: "50px"
     },
     search: {
-        background: "white",
+        "& .MuiFilledInput-root": {
+            background: "rgb(255, 255, 255)"
+        },
         paddingLeft: "6px",
     }
 }));
@@ -71,9 +73,10 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                     </Typography>
                     <TextField
                         color="primary"
+                        className={classes.search}
                         id="filled-search"
                         label="Search" 
-                        variant="outlined"
+                        variant="filled"
                         onChange={filter}
                         size="small"
                     />
