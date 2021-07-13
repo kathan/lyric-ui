@@ -51,7 +51,7 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
 
     const filter = e => {
         const filterValue = e.target.value;
-        filteredSongs = allSongs.filter(song => song.title.toLowerCase().includes(filterValue));
+        filteredSongs = allSongs.filter(song => song.title.toLowerCase().includes(filterValue) || song.artist.toLowerCase().includes(filterValue));
         setSongs(filteredSongs);
     };
 
@@ -63,7 +63,6 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                     <IconButton 
                         edge="start" 
                         aria-label="back"
-                        
                     >
                         <ArrowLeft onClick={selectSetlistPage}/>
                     </IconButton>
