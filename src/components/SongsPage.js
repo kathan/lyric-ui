@@ -46,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
 export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) {
     const classes = useStyles();
     const [ songs, setSongs ] = useState(setlist.Songs); 
-    let filteredSongs = setlist.Songs;
+    let filteredSongs;
+    const allSongs = setlist.Songs;
 
     const filter = e => {
         const filterValue = e.target.value;
