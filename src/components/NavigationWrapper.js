@@ -1,6 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,6 +10,10 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import SongsPage from './SongsPage';
 import SetlistsPage from './SetlistsPage';
 import SongPage from './SongPage';
+import SongService from '../services/songs';
+import SetlistService from '../services/setlists';
+
+
 
 const PAGE = {
   SETLISTS: 'SETLISTS',
@@ -19,7 +22,7 @@ const PAGE = {
   SONG_EDIT: 'SONG_EDIT' 
 };
 
-const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
   root: {
     display: 'flex',
   },
@@ -33,117 +36,182 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
     // paddingTop: "50px"
   },
-}));
+});
 
-export default function ClippedDrawer() {
-    const classes = useStyles();
-    const [page, setPage] = useState(PAGE.SETLISTS);
-    const [setlist, setSetlist] = useState();
-    const [songs, setSongs] = useState();
-    const [song, setSong] = useState();
+class NavigationWrapper extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...props,
+      page: PAGE.SETLISTS
+    };
+  }
 
-    const selectSetlist = setlist => {
-      let selectedSetlist;
-      if(setlist){
-        selectedSetlist = setlist;
-      }else{
-        selectedSetlist = {
-          id: "",
-          name: "All Songs",
-          Songs: allSongs
-        }
+  selectSetlist(setlist){
+    let selectedSetlist;
+    if(setlist){
+      selectedSetlist = setlist;
+    }else{
+      selectedSetlist = {
+        id: "",
+        name: "All Songs",
+        Songs: allSongs
       }
-      setSetlist(selectedSetlist);
-      setPage(PAGE.SONGS);
     }
+    this.setState({
+      setlist: selectedSetlist,
+      page: PAGE.SONGS
+    });
+  }
 
-    const selectSetlistPage = () =>{
-      setPage(PAGE.SETLISTS);
+  selectSetlistPage(){
+    this.setState({
+      page: PAGE.SETLISTS
+    });
+  }
+
+  selectSong(song){
+    this.setState({
+      song,
+      page: PAGE.SONG
+    });
+  }
+
+  async getSetlists(){
+    return await SetlistService.getSetlists();
+  }
+
+  componentDidMount(){
+    this.loadData();
+  }
+
+  loadData(){
+    let allSongs;
+      let setlistResult;
+      if(this.state.allSongs === undefined){
+          SongService.getAllSongs()
+          .then(songsResponse => {
+              allSongs = {
+                  allSongs: {
+                        id: "",
+                        name: "All Songs",
+                        Songs: songsResponse.data.songs
+                  }
+              };
+              this.setState(allSongs);
+              this.checkData(allSongs, setlistResult);
+          });
+      }
+
+      if(this.state.setlists === undefined){
+          this.getSetlists()
+              .then(setlistResponse => {
+                  setlistResult = setlistResponse.data.setlists;
+                  this.checkData(allSongs, setlistResult);
+              });
+      }
+  }
+
+  checkData(allSongs, setlistResponse){
+    if(allSongs && Array.isArray(setlistResponse)){
+        this.setState({
+            setlists: [this.state.allSongs, ...setlistResponse]
+        });
     }
+  }
 
-    const onClickSong = song =>{
-      setSong(song);
-      setPage(PAGE.SONG);
-    }
-
-    const getPage = () => {
-      let currentPage;
-      switch(page) { 
-        case PAGE.SONGS:
-          currentPage = (
-          <SongsPage
-            selectSetlistPage={selectSetlistPage}
-            setlist={setlist}
-            songs={songs}
-            onClickSong={onClickSong}
+  getPage(){
+    let currentPage;
+    switch(this.state.page) { 
+      case PAGE.SONGS:
+        currentPage = (
+        <SongsPage
+          selectSetlistPage={this.selectSetlistPage.bind(this)}
+          setlist={this.state.setlist}
+          songs={this.state.songs}
+          onClickSong={this.selectSong.bind(this)}
+        />)
+        break;
+      case PAGE.SETLISTS:
+        currentPage = (
+        <SetlistsPage
+          setlists={this.state.setlists}
+          onClickSetlist={this.selectSetlist.bind(this)}
+        />)
+        break;
+      case PAGE.SONG:
+        currentPage = (
+          <SongPage
+            setSetlist={this.selectSetlist.bind(this)}
+            song={this.state.song}
+            setlist={this.state.setlist}
+            onClickSetlist={song => {
+              this.setState({
+                song,
+                page: PAGE.SONG
+              });
+            }}
           />)
-          break;
-        case PAGE.SETLISTS:
+        break;
+        case PAGE.SONG_EDIT:
           currentPage = (
-          <SetlistsPage
-            onClickSetlist={selectSetlist}
-          />)
-          break;
-        case PAGE.SONG:
-          currentPage = (
-            <SongPage
-              setSetlist={selectSetlist}
-              song={song}
-              setlist={setlist}
-              onClickSetlist={song => {
-                setSong(song);
-                setPage(PAGE.SONG);
+            <SongEdit
+              onClickSetlist={setlist => {
+                this.setState({
+                  setlist,
+                  songs: setlist.Songs,
+                  page: PAGE.SONGS
+                });
               }}
             />)
           break;
-          case PAGE.SONG_EDIT:
-            currentPage = (
-              <SongEdit
-                onClickSetlist={setlist => {
-                  setSetlist(setlist);
-                  setSongs(setlist.Songs);
-                  setPage(PAGE.SONGS);
-                }}
-              />)
-            break;
-          }
-          return currentPage;
-    }
-
-    return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar>
-            <BottomNavigation
-              position="fixed"
-              color="inherit"
-              // value={page}
-              onChange={(event, newValue) => {
-                setPage(newValue);
-              }}
-              showLabels
-              className={classes.root}
-            >
-              <BottomNavigationAction 
-                label="Setlists" 
-                value={PAGE.SETLISTS} 
-                icon={<ListIcon color="inherit"/>} 
-                color="inherit"
-              />
-              <BottomNavigationAction 
-                label="Songs" 
-                value={PAGE.SONGS} 
-                icon={<MusicNoteIcon color="inherit"/>}
-                color="inherit"
-              />
-            </BottomNavigation>
-          </Toolbar>
-        </AppBar>
-        <main className={classes.content}>
-          {getPage()}
-        </main>
-        <BottomNavigation/>
-      </div>
-    );
+        }
+        return currentPage;
   }
+  
+  render(){
+      const {
+        classes
+      } = this.state;
+
+      return (
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="fixed" className={classes.appBar}>
+            <Toolbar>
+              <BottomNavigation
+                position="fixed"
+                color="inherit"
+                onChange={(event, newValue) => {
+                  this.setState({
+                    page: newValue
+                  });
+                }}
+                showLabels
+                className={classes.root}
+              >
+                <BottomNavigationAction 
+                  label="Setlists" 
+                  value={PAGE.SETLISTS} 
+                  icon={<ListIcon color="inherit"/>} 
+                  color="inherit"
+                />
+                <BottomNavigationAction 
+                  label="Songs" 
+                  value={PAGE.SONGS} 
+                  icon={<MusicNoteIcon color="inherit"/>}
+                  color="inherit"
+                />
+              </BottomNavigation>
+            </Toolbar>
+          </AppBar>
+          <main className={classes.content}>
+            {this.getPage()}
+          </main>
+          <BottomNavigation/>
+        </div>
+      );
+  }
+}
+
+export default withStyles(styles, { withTheme: true })(NavigationWrapper);

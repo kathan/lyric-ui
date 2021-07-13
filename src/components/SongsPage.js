@@ -76,6 +76,7 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                         label="Search" 
                         variant="outlined"
                         onChange={filter}
+                        size="small"
                     />
                 </Toolbar>
                 {/* <input type="text" /> */}
@@ -84,9 +85,8 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                 <List>
                 {songs.length > 0 ? songs.map(song => (
                     <ListItem onClick={() => onClickSong(song)}>
-                        
                         <Link href={`#song/${song.id}`}>
-                            <ListItemText primary={song.title} />
+                            <ListItemText primary={song.title} secondary={song.artist}/>
                         </Link>
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="add">
