@@ -15,6 +15,8 @@ import SetlistService from '../services/setlists';
 import { grey } from '@material-ui/core/colors';
 import SetlistEdit from './SetlistEdit';
 import SetlistSelectPage from './SetlistSelectPage';
+import SongEdit from './SongEdit';
+
 
 const PAGE = {
   SETLISTS: 'SETLISTS',
@@ -168,6 +170,26 @@ class NavigationWrapper extends React.Component{
     })
   }
 
+  editSong(song){
+    this.setState({
+      song,
+      page: PAGE.SONG_EDIT
+    })
+  }
+
+  saveSong(song){
+    SongService.saveSong(song)
+      .then(songResult => {
+        this.setState({
+          page: PAGE.ALL_SONGS,
+          allSongs: {
+            ...this.state.allSongs,
+            Songs: [...this.state.allSongs.Songs, songResult.data]
+          }
+        })
+      })
+  }
+
   getPage(){
     let currentPage;
     switch(this.state.page) {
@@ -200,6 +222,7 @@ class NavigationWrapper extends React.Component{
       case PAGE.SONGS:
         currentPage = (
         <SongsPage
+          newSong={this.editSong.bind(this)}
           selectSetlistToAdd={this.selectSetlistToAdd.bind(this)}
           returnToSetlistPage={this.selectSetlistPage.bind(this)}
           setlist={this.state.setlist}
@@ -217,6 +240,7 @@ class NavigationWrapper extends React.Component{
       case PAGE.SONG:
         currentPage = (
           <SongPage
+            editSong={this.editSong.bind(this)}
             setSetlist={this.selectSetlist.bind(this)}
             song={this.state.song}
             setlist={this.state.setlist}
@@ -231,6 +255,13 @@ class NavigationWrapper extends React.Component{
         case PAGE.SONG_EDIT:
           currentPage = (
             <SongEdit
+              saveSong={this.saveSong.bind(this)}
+              done={()=>{
+                this.setState({
+                  page: PAGE.SONGS
+                });
+              }}
+              song={this.state.song}
               onClickSetlist={setlist => {
                 this.setState({
                   setlist,

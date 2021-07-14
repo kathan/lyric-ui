@@ -10,10 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import Slider from '@material-ui/core/Slider';
 import { useEffect, useState } from 'react';
-import TextField from '@material-ui/core/TextField';
+import EditIcon from '@material-ui/icons/Edit';
 import { grey } from '@material-ui/core/colors';
-import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        paddingTop: "100px",
-        paddingBottom: "100px",
+        paddingTop: "70px",
+        paddingBottom: "70px",
         paddingLeft: "0px",
         paddingRight: "0px"
     },
@@ -61,9 +59,9 @@ const useStyles = makeStyles((theme) => ({
         },
     }
 }));
-export default function SongPage(props){
+export default function SongPage({ song, setlist, setSetlist, editSong }){
     const classes = useStyles();
-    const { song, setlist, setSetlist } = props;
+    // const  = props;
     const [fontSize, setFontSize] = useState(20);
     const [playing, setPlaying] = useState(false);
 
@@ -118,8 +116,14 @@ export default function SongPage(props){
                             style={{ color: "white" }}
                             onClick={play}
                         />
-                    </IconButton> 
+                    </IconButton>
                     }
+                    <IconButton edge="end" aria-label="edit">
+                        <EditIcon 
+                            style={{ color: "white" }}
+                            onClick={() => editSong(song)}
+                        />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <main className={classes.content}>

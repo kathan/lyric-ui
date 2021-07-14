@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        paddingTop: "100px"
+        paddingTop: "70px"
     },
     link:{
         color: "white"

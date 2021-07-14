@@ -38,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        paddingTop: "100px",
+        paddingTop: "70px",
         paddingLeft: "0px",
         paddingRight: "0px",
-        paddingBottom: "100px"
+        paddingBottom: "70px"
     },
     search: {
         "& .MuiFilledInput-root": {
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SongsPage( { onClickSong, setlist, returnToSetlistPage, selectSetlistToAdd }) {
+export default function SongsPage( { onClickSong, setlist, returnToSetlistPage, selectSetlistToAdd, newSong }) {
     const classes = useStyles();
     const [ songs, setSongs ] = useState(setlist.Songs); 
     let filteredSongs;
@@ -93,6 +93,15 @@ export default function SongsPage( { onClickSong, setlist, returnToSetlistPage, 
                         onChange={filter}
                         size="small"
                     />
+                    <IconButton 
+                        edge="end" 
+                        aria-label="add"
+                        onClick={() => newSong({title:"", artist:"", lyrics:"   "})}
+                    >
+                        <AddIcon 
+                            style={{ color: "white" }}
+                        />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <main className={classes.content}>

@@ -6,7 +6,17 @@ const getAllSongs = async () => {
 };
 
 const saveSong = async song => {
-    return await API.post(uri, song);
+    if(song.id){
+        const url =`${uri}/${song.id}`;
+        const songData = {
+            title: song.title,
+            artist: song.artist,
+            lyrics: song.lyrics
+        }
+        return await API.put(url, songData);
+    }else{
+        return await API.post(uri, song);
+    }
 };
 
 const SongService = {
