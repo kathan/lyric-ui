@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import Divider from '@material-ui/core/Divider';
+import { grey } from '@material-ui/core/colors';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('sm')]: {
         width: "100%",
       },
+      backgroundColor: grey[900]
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -34,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3),
     //   top: "100px"
     },
+    link:{
+        color: "white"
+    }
   }));
  
 export default function SetlistsPage(props){
@@ -52,7 +58,7 @@ export default function SetlistsPage(props){
                         Setlists
                     </Typography>
                     <IconButton edge="end" aria-label="add">
-                        <AddIcon />
+                        <AddIcon style={{ color: "white" }}/>
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -61,8 +67,13 @@ export default function SetlistsPage(props){
                 {setlists ? setlists.map(setlist => (
                     <React.Fragment>
                         <ListItem onClick={() => onClickSetlist(setlist)}>
-                            <Link href={`#setlist/${setlist.id}`}>
-                                <ListItemText primary={setlist.name} />
+                            <Link 
+                                href={`#setlist/${setlist.id}`}
+                                className={classes.link}
+                            >
+                                <ListItemText 
+                                    primary={setlist.name} 
+                                />
                             </Link>
                         </ListItem>
                         <Divider component="li" />

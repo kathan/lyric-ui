@@ -13,7 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
-
+import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('sm')]: {
           width: "100%",
         },
+        backgroundColor: grey[900]
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -42,6 +43,14 @@ const useStyles = makeStyles((theme) => ({
             background: "rgb(255, 255, 255)"
         },
         paddingLeft: "6px",
+    },
+    link:{
+        color: "white"
+    },
+    listItemText:{
+        "& .MuiListItemText-secondary": {
+            color: grey[500]
+        }
     }
 }));
 
@@ -66,7 +75,7 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                         edge="start" 
                         aria-label="back"
                     >
-                        <ArrowLeft onClick={selectSetlistPage}/>
+                        <ArrowLeft style={{ color: "white" }} onClick={selectSetlistPage}/>
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         {setlist.name+" Songs"}
@@ -74,7 +83,6 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                     <TextField
                         color="primary"
                         className={classes.search}
-                        id="filled-search"
                         label="Search" 
                         variant="filled"
                         onChange={filter}
@@ -87,12 +95,19 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                 <List>
                 {songs.length > 0 ? songs.map(song => (
                     <ListItem onClick={() => onClickSong(song)}>
-                        <Link href={`#song/${song.id}`}>
-                            <ListItemText primary={song.title} secondary={song.artist}/>
+                        <Link 
+                            href={`#song/${song.id}`}
+                            className={classes.link}
+                        >
+                            <ListItemText 
+                                primary={song.title} 
+                                secondary={song.artist}
+                                className={classes.listItemText}
+                            />
                         </Link>
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="add">
-                                <AddIcon />
+                                <AddIcon style={{ color: "white" }}/>
                             </IconButton>
                         </ListItemSecondaryAction>
                     </ListItem>

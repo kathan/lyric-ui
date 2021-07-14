@@ -12,8 +12,7 @@ import SetlistsPage from './SetlistsPage';
 import SongPage from './SongPage';
 import SongService from '../services/songs';
 import SetlistService from '../services/setlists';
-
-
+import { grey } from '@material-ui/core/colors';
 
 const PAGE = {
   SETLISTS: 'SETLISTS',
@@ -30,12 +29,16 @@ const styles = theme => ({
     zIndex: theme.zIndex.drawer + 1,
     top: 'auto',
     bottom: 0,
+    backgroundColor: grey[900]
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    // paddingTop: "50px"
+    backgroundColor: "rgb(0, 0, 0)",
   },
+  navAction: {
+    color: "white"
+  }
 });
 
 class NavigationWrapper extends React.Component{
@@ -181,7 +184,7 @@ class NavigationWrapper extends React.Component{
             <Toolbar>
               <BottomNavigation
                 position="fixed"
-                color="inherit"
+                style={{backgroundColor: grey[900], color: "white"}}
                 onChange={(event, newValue) => {
                   this.setState({
                     page: newValue
@@ -193,14 +196,17 @@ class NavigationWrapper extends React.Component{
                 <BottomNavigationAction 
                   label="Setlists" 
                   value={PAGE.SETLISTS} 
-                  icon={<ListIcon color="inherit"/>} 
-                  color="inherit"
+                  icon={<ListIcon/>} 
+                  // style={{color: "white"}}
+                  className={classes.navAction}
                 />
                 <BottomNavigationAction 
                   label="Songs" 
                   value={PAGE.SONGS} 
-                  icon={<MusicNoteIcon color="inherit"/>}
+                  icon={<MusicNoteIcon style={{color: "white"}}/>}
                   color="inherit"
+                  // style={{color: "white"}}
+                  className={classes.navAction}
                 />
               </BottomNavigation>
             </Toolbar>
