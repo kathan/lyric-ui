@@ -18,6 +18,8 @@ import { grey } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        color: "white",
+        backgroundColor: "black"
     },
     appBar: {
         [theme.breakpoints.up('sm')]: {
@@ -36,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        // paddingTop: "50px"
+        paddingTop: "50px",
+        paddingLeft: "0px",
+        paddingRight: "0px"
     },
     search: {
         "& .MuiFilledInput-root": {
@@ -54,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) {
+export default function SongsPage( { onClickSong, setlist, returnToSetlistPage, selectSetlistToAdd }) {
     const classes = useStyles();
     const [ songs, setSongs ] = useState(setlist.Songs); 
     let filteredSongs;
@@ -75,7 +79,7 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                         edge="start" 
                         aria-label="back"
                     >
-                        <ArrowLeft style={{ color: "white" }} onClick={selectSetlistPage}/>
+                        <ArrowLeft style={{ color: "white" }} onClick={returnToSetlistPage}/>
                     </IconButton>
                     <Typography variant="h6" noWrap>
                         {setlist.name+" Songs"}
@@ -89,10 +93,11 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                         size="small"
                     />
                 </Toolbar>
-                {/* <input type="text" /> */}
             </AppBar>
             <main className={classes.content}>
-                <List>
+                <List
+                    style={{padding: "0px"}}
+                >
                 {songs.length > 0 ? songs.map(song => (
                     <ListItem onClick={() => onClickSong(song)}>
                         <Link 
@@ -107,7 +112,10 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
                         </Link>
                         <ListItemSecondaryAction>
                             <IconButton edge="end" aria-label="add">
-                                <AddIcon style={{ color: "white" }}/>
+                                <AddIcon 
+                                    onClick={() => selectSetlistToAdd(song)}
+                                    style={{ color: "white" }}
+                                />
                             </IconButton>
                         </ListItemSecondaryAction>
                     </ListItem>

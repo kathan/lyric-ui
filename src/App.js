@@ -1,5 +1,18 @@
 import React from 'react';
 import NavigationWrapper from './components/NavigationWrapper';
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+const theme = createMuiTheme({
+    palette: {
+      background: {
+        default: "black"
+      },
+      text: {
+        primary: "#ffffff"
+      }
+    }
+});
 
 class App extends React.Component{
     constructor(props) {
@@ -9,7 +22,10 @@ class App extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <NavigationWrapper/>
+                <MuiThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <NavigationWrapper/>
+                </MuiThemeProvider>
             </React.Fragment>
         );
     }

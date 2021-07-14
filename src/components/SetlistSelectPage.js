@@ -45,12 +45,12 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
  
-export default function SetlistsPage(props){
+export default function SetlistSelectPage(props){
     const classes = useStyles();
     const {
-        onClickSetlist,
         setlists,
-        addSetlist
+        song,
+        onSelect
     } = props;
 
     return (
@@ -59,17 +59,8 @@ export default function SetlistsPage(props){
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
                     <Typography variant="h6" noWrap>
-                        Setlists
+                        Add {song.title} to Setlist 
                     </Typography>
-                    <IconButton 
-                        edge="end" 
-                        aria-label="add"
-                        onClick={addSetlist}
-                    >
-                        <AddIcon 
-                            style={{ color: "white" }}
-                        />
-                    </IconButton>
                 </Toolbar>
             </AppBar>
             <main className={classes.content}>
@@ -78,15 +69,12 @@ export default function SetlistsPage(props){
                 >
                 {setlists ? setlists.map(setlist => (
                     <React.Fragment>
-                        <ListItem onClick={() => onClickSetlist(setlist)}>
-                            <Link 
-                                href={`#setlist/${setlist.id}`}
-                                className={classes.link}
-                            >
-                                <ListItemText 
-                                    primary={setlist.name} 
-                                />
-                            </Link>
+                        <ListItem 
+                            onClick={() => onSelect(song, setlist)}
+                        >
+                            <ListItemText 
+                                primary={setlist.name}
+                            />
                         </ListItem>
                         <Divider component="li" />
                     </React.Fragment>

@@ -13,12 +13,17 @@ import SongPage from './SongPage';
 import SongService from '../services/songs';
 import SetlistService from '../services/setlists';
 import { grey } from '@material-ui/core/colors';
+import SetlistEdit from './SetlistEdit';
+import SetlistSelectPage from './SetlistSelectPage';
 
 const PAGE = {
   SETLISTS: 'SETLISTS',
   SONGS: 'SONGS',
   SONG: 'SONG',
-  SONG_EDIT: 'SONG_EDIT' 
+  SONG_EDIT: 'SONG_EDIT',
+  SETLIST_EDIT: 'SETLIST_EDIT',
+  ADD_SONG_TO_SETLIST: 'ADD_SONG_TO_SETLIST',
+  ALL_SONGS: 'ALL_SONGS'
 };
 
 const styles = theme => ({
@@ -34,7 +39,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    backgroundColor: "rgb(0, 0, 0)",
+    padding: "0px"
   },
   navAction: {
     color: "white"
@@ -123,21 +128,88 @@ class NavigationWrapper extends React.Component{
     }
   }
 
+  addSetlist(setlist){
+    this.setState({
+      page: PAGE.SETLIST_EDIT
+    })
+  }
+
+  saveSongToSetlist(song, setlist){
+    SetlistService.addSongToSetlist(setlist.id, song.id)
+      .then(addSongToSetlistResult => {
+        this.setState({
+          page: PAGE.SONGS,
+        });
+        this.loadData();
+      })
+  }
+
+  saveSetlist(setlist){
+    SetlistService.saveSetlist(setlist)
+      .then(addSetlistResult => {
+        this.setState({
+          page: PAGE.SETLISTS,
+          setlists: [...this.state.setlists, addSetlistResult.data]
+        })
+      })
+  }
+
+  selectSetlistToAdd(song){
+    this.setState({
+      song,
+      page: PAGE.ADD_SONG_TO_SETLIST
+    })
+  }
+
+  showAllSongs(){
+    this.setState({
+      setlist: this.state.allSongs,
+      page: PAGE.SONGS
+    })
+  }
+
   getPage(){
     let currentPage;
-    switch(this.state.page) { 
+    switch(this.state.page) {
+      case PAGE.ALL_SONGS:
+        this.showAllSongs();
+        break;
+      case PAGE.ADD_SONG_TO_SETLIST:
+        currentPage = (
+        <SetlistSelectPage
+          onSelect={this.saveSongToSetlist.bind(this)}
+          setlists={this.state.setlists}
+          song={this.state.song}
+        />);
+        break;
+      case PAGE.SETLIST_EDIT:
+        let currentSetlist = this.state.setlist || {
+          name: ""
+        }
+        currentPage = (
+        <SetlistEdit 
+          saveSetlist={this.saveSetlist.bind(this)}
+          setlist={currentSetlist}
+          done={()=>{
+            this.setState({
+              page: PAGE.SETLISTS
+            });
+          }}
+        />);
+        break;
       case PAGE.SONGS:
         currentPage = (
         <SongsPage
-          selectSetlistPage={this.selectSetlistPage.bind(this)}
+          selectSetlistToAdd={this.selectSetlistToAdd.bind(this)}
+          returnToSetlistPage={this.selectSetlistPage.bind(this)}
           setlist={this.state.setlist}
-          songs={this.state.songs}
           onClickSong={this.selectSong.bind(this)}
         />)
         break;
       case PAGE.SETLISTS:
         currentPage = (
         <SetlistsPage
+          addSetlist={this.addSetlist.bind(this)}
           setlists={this.state.setlists}
           onClickSetlist={this.selectSetlist.bind(this)}
         />)
@@ -179,7 +251,6 @@ class NavigationWrapper extends React.Component{
 
       return (
         <div className={classes.root}>
-          <CssBaseline />
           <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
               <BottomNavigation
@@ -197,15 +268,13 @@ class NavigationWrapper extends React.Component{
                   label="Setlists" 
                   value={PAGE.SETLISTS} 
                   icon={<ListIcon/>} 
-                  // style={{color: "white"}}
                   className={classes.navAction}
                 />
                 <BottomNavigationAction 
                   label="Songs" 
-                  value={PAGE.SONGS} 
+                  value={PAGE.ALL_SONGS} 
                   icon={<MusicNoteIcon style={{color: "white"}}/>}
                   color="inherit"
-                  // style={{color: "white"}}
                   className={classes.navAction}
                 />
               </BottomNavigation>
