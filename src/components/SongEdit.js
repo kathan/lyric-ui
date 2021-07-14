@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
         }
     }
 }));
-export default function SongEdit( { onClickSong, song, done, saveSong }) {
+export default function SongEdit( { song, done, saveSong }) {
     const classes = useStyles();
 
     return (

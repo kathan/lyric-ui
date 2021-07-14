@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 import { grey } from '@material-ui/core/colors';
 
 
@@ -58,18 +59,29 @@ export default function SetlistsPage(props){
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
-                    <Typography variant="h6" noWrap>
-                        Setlists
-                    </Typography>
-                    <IconButton 
-                        edge="end" 
-                        aria-label="add"
-                        onClick={addSetlist}
+                    <Grid
+                        justify="space-between"
+                        container 
                     >
-                        <AddIcon 
-                            style={{ color: "white" }}
-                        />
-                    </IconButton>
+                        <Grid item> 
+                            <Typography 
+                                variant="h6"
+                                noWrap
+                            >
+                                Setlists
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <IconButton 
+                                aria-label="add"
+                                onClick={addSetlist}
+                            >
+                                <AddIcon 
+                                    style={{ color: "white" }}
+                                />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <main className={classes.content}>

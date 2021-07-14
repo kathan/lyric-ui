@@ -1,12 +1,11 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import ListIcon from '@material-ui/icons/List';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import SongsPage from './SongsPage';
 import SetlistsPage from './SetlistsPage';
 import SongPage from './SongPage';
@@ -16,7 +15,6 @@ import { grey } from '@material-ui/core/colors';
 import SetlistEdit from './SetlistEdit';
 import SetlistSelectPage from './SetlistSelectPage';
 import SongEdit from './SongEdit';
-
 
 const PAGE = {
   SETLISTS: 'SETLISTS',
@@ -45,6 +43,9 @@ const styles = theme => ({
   },
   navAction: {
     color: "white"
+  },
+  tabBar:{
+    width: "100%"
   }
 });
 
@@ -283,33 +284,27 @@ class NavigationWrapper extends React.Component{
       return (
         <div className={classes.root}>
           <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <BottomNavigation
-                position="fixed"
-                style={{backgroundColor: grey[900], color: "white"}}
-                onChange={(event, newValue) => {
-                  this.setState({
-                    page: newValue
-                  });
-                }}
-                showLabels
-                className={classes.root}
-              >
-                <BottomNavigationAction 
-                  label="Setlists" 
-                  value={PAGE.SETLISTS} 
-                  icon={<ListIcon/>} 
-                  className={classes.navAction}
-                />
-                <BottomNavigationAction 
-                  label="Songs" 
-                  value={PAGE.ALL_SONGS} 
-                  icon={<MusicNoteIcon style={{color: "white"}}/>}
-                  color="inherit"
-                  className={classes.navAction}
-                />
-              </BottomNavigation>
-            </Toolbar>
+                <Tabs
+                  variant="fullWidth"
+                  className={classes.tabBar}
+                  onChange={(event, newValue) => {
+                    this.setState({
+                      page: newValue
+                    });
+                  }}
+                  aria-label="simple tabs example"
+                >
+                  <Tab 
+                    label="Setlists" 
+                    icon={<ListIcon/>}
+                    value={PAGE.SETLISTS} 
+                  />
+                  <Tab 
+                    label="Songs" 
+                    icon={<MusicNoteIcon/>}
+                    value={PAGE.ALL_SONGS} 
+                  />
+                </Tabs>
           </AppBar>
           <main className={classes.content}>
             {this.getPage()}
