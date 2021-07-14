@@ -38,7 +38,10 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        paddingTop: "50px",
+        paddingTop: "100px",
+        paddingBottom: "100px",
+        paddingLeft: "0px",
+        paddingRight: "0px"
     },
     lyrics: {
         color: "rgb(255, 255, 255)"

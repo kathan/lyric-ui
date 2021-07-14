@@ -38,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        paddingTop: "50px",
+        paddingTop: "100px",
         paddingLeft: "0px",
         paddingRight: "0px",
-        paddingBottom: "50px"
+        paddingBottom: "100px"
     },
     search: {
         "& .MuiFilledInput-root": {
