@@ -62,7 +62,7 @@ export default function SongsPage( { onClickSong, setlist, selectSetlistPage }) 
 
     const filter = e => {
         const filterValue = e.target.value;
-        filteredSongs = allSongs.filter(song => song.title.toLowerCase().includes(filterValue) || song.artist.toLowerCase().includes(filterValue));
+        filteredSongs = allSongs.filter(song => song.title.toLowerCase().includes(filterValue.toLowerCase()) || song.artist.toLowerCase().includes(filterValue.toLowerCase()));
         setSongs(filteredSongs);
     };
 
