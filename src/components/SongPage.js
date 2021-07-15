@@ -42,7 +42,9 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: "0px"
     },
     lyrics: {
-        color: "rgb(255, 255, 255)"
+        color: "rgb(255, 255, 255)",
+        fontWeight: "bold",
+        fontFamily: "Arial,Helvetica,sans-serif"
     },
     fontSize: {
         "& .MuiFilledInput-root": {
@@ -62,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SongPage({ song, setlist, setSetlist, editSong }){
     const classes = useStyles();
     // const  = props;
-    const [fontSize, setFontSize] = useState(20);
+    const [fontSize, setFontSize] = useState(40);
     const [playing, setPlaying] = useState(false);
 
     const fontSizeChange = (event, newValue) => {

@@ -37,12 +37,12 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: "0px",
         paddingBottom: "70px"
     },
-    search: {
-        "& .MuiFilledInput-root": {
-            background: "rgb(255, 255, 255)"
-        },
-        paddingLeft: "6px",
-    },
+    // search: {
+    //     "& .MuiFilledInput-root": {
+    //         background: "rgb(255, 255, 255)"
+    //     },
+    //     paddingLeft: "6px",
+    // },
     link:{
         color: "white"
     },
@@ -50,7 +50,13 @@ const useStyles = makeStyles((theme) => ({
         "& .MuiListItemText-secondary": {
             color: grey[500]
         }
-    }
+    },
+    lyrics: {
+        color: "rgb(255, 255, 255)",
+        fontWeight: "bold",
+        fontFamily: "Arial,Helvetica,sans-serif",
+        fontSize: "40px",
+    },
 }));
 export default function SongEdit( { song, done, saveSong }) {
     const classes = useStyles();
@@ -76,7 +82,7 @@ export default function SongEdit( { song, done, saveSong }) {
             <main className={classes.content}>
                 <TextField
                     defaultValue={song.title}
-                    style={{width: "50%", color: "black", backgroundColor: "white"}}
+                    style={{width: "30%", color: "black", backgroundColor: "white"}}
                     label="Title" 
                     variant="filled"
                     onChange={event => song.title = event.target.value}
@@ -84,19 +90,34 @@ export default function SongEdit( { song, done, saveSong }) {
                 />
                 <TextField
                     defaultValue={song.artist}
-                    style={{width: "50%", color: "black", backgroundColor: "white"}}
+                    style={{width: "30%", color: "black", backgroundColor: "white"}}
                     label="Artist" 
                     variant="filled"
                     onChange={event => song.artist = event.target.value}
                     size="small"
                 />
+                <TextField
+                    // id="time"
+                    style={{width: "30%", color: "black", backgroundColor: "white"}}
+                    label="Song Time"
+                    type="time"
+                    defaultValue={song.time}
+                    // className={classes.textField}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    // inputProps={{
+                    // step: 300, // 5 min
+                    // }}
+                />
                 <div>
                 <ContentEditable 
+                    className={classes.lyrics}
                     html={song.lyrics}
                     onChange={event => song.lyrics = event.target.value}
                     id="lyrics_edit" 
                     name="lyrics" 
-                    class="song" 
+                    // class="song" 
                     ng-model="current_song.lyrics" 
                     strip-br="true" 
                     required

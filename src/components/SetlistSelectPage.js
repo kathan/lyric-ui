@@ -70,11 +70,15 @@ export default function SetlistSelectPage(props){
                 {setlists ? setlists.map(setlist => (
                     <React.Fragment>
                         <ListItem 
-                            onClick={() => onSelect(song, setlist)}
                         >
-                            <ListItemText 
-                                primary={setlist.name}
-                            />
+                            <Link 
+                                onClick={() => onSelect(song, setlist)}
+                                className={classes.link}
+                            >
+                                <ListItemText 
+                                    primary={setlist.name}
+                                />
+                            </Link>
                         </ListItem>
                         <Divider component="li" />
                     </React.Fragment>

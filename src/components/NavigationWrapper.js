@@ -145,6 +145,9 @@ class NavigationWrapper extends React.Component{
         });
         this.loadData();
       })
+      .error(errpr => {
+        console.error('Error:', error);
+      })
   }
 
   saveSetlist(setlist){
