@@ -9,7 +9,8 @@ const theme = createMuiTheme({
         default: "black"
       },
       text: {
-        primary: "#ffffff"
+        primary: "#fff",
+        secondary: "#eee"
       }
     }
 });

@@ -63,23 +63,70 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function SongPage({ song, setlist, setSetlist, editSong }){
     const classes = useStyles();
-    // const  = props;
     const [fontSize, setFontSize] = useState(40);
     const [playing, setPlaying] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(1);
+    const [offScreen, setOffScreen] = useState();
+    const [interval, setInterval] = useState();
+
+    const parseTime = time => {
+        const timeParts = time.split(":");
+        const minutes = parseInt(timeParts[0]);
+        const seconds = parseInt(timeParts[1]);
+        return (minutes * 60) + seconds;
+    }
 
     const fontSizeChange = (event, newValue) => {
         const value = event.target.value || newValue;
         setFontSize(value);
     }
 
-    const play = () => {
+    const start = () => {
         setPlaying(true);
+    }
+
+    if(playing){
+        window.setTimeout(() => {
+            console.log('Moving to', scrollPosition);
+            window.scroll(0, scrollPosition);
+            if(scrollPosition >= offScreen){
+                setPlaying(false);
+                setScrollPosition(0);  
+                return;
+            }
+            setScrollPosition(scrollPosition+1);  
+        }, interval);
     }
 
     const stop = () => {
         setPlaying(false);
     }
-    console.log('window.pageYOffset', window.pageYOffset);
+
+    const togglePlay = () =>{
+        if(playing){
+            stop();
+        }else{
+            start();
+        }
+    }
+    
+    useEffect(() => {
+        window.addEventListener("scroll", event => {
+            // if(!playing){
+            //     // setScrollPosition(event.target.documentElement.scrollTop)
+            // }
+            // console.log('event', event  );
+
+            // console.log('event.target.documentElement.scrollTop', event.target.documentElement.scrollTop);
+        });
+        setOffScreen(document.documentElement.scrollTopMax);
+        const totalMilliSeconds = parseTime(song.time) * 1000;
+        setInterval(totalMilliSeconds / offScreen);
+        console.log('interval', interval);
+            
+    });
+    // console.log('document.documentElement.scrollTopMax', document.documentElement.scrollTopMax)
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -87,7 +134,7 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
                 position="fixed" 
                 className={classes.appBar}
             >
-                <Toolbar>
+                <Toolbar className={classes.toolbar}>
                     <IconButton edge="start" aria-label="back">
                         <ArrowLeft style={{ color: "white" }} onClick={() => setSetlist(setlist)}/>
                     </IconButton>
@@ -116,7 +163,7 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
                     <IconButton edge="end" aria-label="play">
                         <PlayArrow 
                             style={{ color: "white" }}
-                            onClick={play}
+                            onClick={start}
                         />
                     </IconButton>
                     }
@@ -130,6 +177,7 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
             </AppBar>
             <main className={classes.content}>
                 <Typography 
+                    onClick={togglePlay}
                     className={classes.lyrics}
                     style={{fontSize: fontSize+'px'}}
                     display="block"

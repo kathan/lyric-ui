@@ -11,7 +11,8 @@ const saveSong = async song => {
         const songData = {
             title: song.title,
             artist: song.artist,
-            lyrics: song.lyrics
+            lyrics: song.lyrics,
+            time: song.time
         }
         return await API.put(url, songData);
     }else{

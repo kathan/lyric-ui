@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ContentEditable from 'react-contenteditable';
+import { useEffect, useState } from 'react';
+// import { TimePicker } from "@material-ui/pickers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,8 +60,10 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "40px",
     },
 }));
-export default function SongEdit( { song, done, saveSong }) {
+export default function SongEdit(props) {
+    const { done, saveSong } = props
     const classes = useStyles();
+    const [song, setSong] = useState(props.song);
 
     return (
         <div className={classes.root}>
@@ -82,30 +86,52 @@ export default function SongEdit( { song, done, saveSong }) {
             <main className={classes.content}>
                 <TextField
                     defaultValue={song.title}
-                    style={{width: "30%", color: "black", backgroundColor: "white"}}
+                    style={{width: "30%"}}
                     label="Title" 
                     variant="filled"
-                    onChange={event => song.title = event.target.value}
+                    onChange={event => {
+                        setSong({
+                            ...song,
+                            title: event.target.value
+                        })
+                    }}
                     size="small"
                 />
                 <TextField
                     defaultValue={song.artist}
-                    style={{width: "30%", color: "black", backgroundColor: "white"}}
+                    style={{width: "30%"}}
                     label="Artist" 
                     variant="filled"
-                    onChange={event => song.artist = event.target.value}
+                    onChange={event => {
+                        setSong({
+                            ...song,
+                            artist: event.target.value
+                        })
+                    }}
                     size="small"
                 />
                 <TextField
-                    // id="time"
-                    style={{width: "30%", color: "black", backgroundColor: "white"}}
+                    style={{width: "30%"}}
                     label="Song Time"
                     type="time"
-                    defaultValue={song.time}
                     // className={classes.textField}
+                    onChange={event => {
+                        setSong({
+                            ...song,
+                            time: event.target.value
+                        })
+                    }}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    defaultValue={song.time || "00:00"}
+                    style={{
+                        "::-webkit-datetime-edit-ampm-field": {
+                            "display": "none",
+                            "color": "transparent"
+                        }
+                    }}
+                    // ampm={false}
                     // inputProps={{
                     // step: 300, // 5 min
                     // }}
