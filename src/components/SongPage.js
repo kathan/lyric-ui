@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,12 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import Slider from '@material-ui/core/Slider';
-import { useEffect, useState } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import { grey } from '@material-ui/core/colors';
+import { withStyles } from '@material-ui/core/styles';
 
+const defaultTime = "04:00";
 // let playing = false;
-const useStyles = makeStyles((theme) => ({
+// const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
     root: {
         display: 'flex',
         color: "white",
@@ -61,16 +62,20 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: "rgb(255, 255, 255)"
         },
     }
-}));
-export default function SongPage({ song, setlist, setSetlist, editSong }){
-    const classes = useStyles();
-    const [fontSize, setFontSize] = useState(40);
-    const [playing, setPlaying] = useState(false);
-    const [scrollPosition, setScrollPosition] = useState(1);
-    const [offScreen, setOffScreen] = useState();
-    const [interval, setInterval] = useState();
+});
 
-    const parseTime = time => {
+class SongPage extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            ...props,
+            fontSize: 40,
+            playin: false,
+            scrollPosition: 1
+        };
+    }
+
+    parseTime(time){
         if(time){
             const timeParts = time.split(":");
             const minutes = parseInt(timeParts[0]);
@@ -79,122 +84,145 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
         }
     }
 
-    const fontSizeChange = (event, newValue) => {
+    fontSizeChange(event, newValue){
         const value = event.target.value || newValue;
-        setFontSize(value);
+        this.setState({
+            fontSize: value
+        });
     }
 
-    const start = () => {
-        setPlaying(true);
-        // playing = true;
+    start(){
+        this.setState({
+            playing: true
+        });
     }
 
-    
 
-    const stop = () => {
-        setPlaying(false);
-        // playing = flase;
+    stop(){
+        this.setState({
+            playing: false
+        });
     }
 
-    const togglePlay = () =>{
-        if(playing){
-            stop();
+    togglePlay(){
+        if(this.state.playing){
+            this.stop();
         }else{
-            start();
+            this.start();
         }
     }
     
-    if(playing){
-        window.setTimeout(() => {
-            console.log('Moving to', scrollPosition);
-            window.scroll(0, scrollPosition);
-            if(scrollPosition >= offScreen){
-                stop()
-                setScrollPosition(0);  
-                return;
-            }
-            setScrollPosition(scrollPosition+1);  
-        }, interval);
-    }
-
-    const handleScroll = event => {
-        if(!playing){
+    handleScroll(event){
+        if(!this.state.playing){
             console.log('setting new scroll location', event.target.documentElement.scrollTop)
-            // setScrollPosition(event.target.documentElement.scrollTop)
+            this.setState({
+                scrollPosition: event.target.documentElement.scrollTop
+            });
         }
         // console.log('event', event  );
 
         // console.log('event.target.documentElement.scrollTop', event.target.documentElement.scrollTop);
     }
 
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
+    componentDidMount(){
 
-        
-        setOffScreen(document.documentElement.scrollHeight - (document.documentElement.scrollTop + document.documentElement.clientHeight));
-        const totalMilliSeconds = parseTime(song.time || "04:00") * 1000;
-        setInterval(totalMilliSeconds / offScreen);
+        window.addEventListener("scroll", this.handleScroll.bind(this));
+
+        const offScreen = document.documentElement.scrollHeight - (document.documentElement.scrollTop + document.documentElement.clientHeight);
+        this.setState({
+            offScreen
+        });
+        const totalMilliSeconds = this.parseTime(this.state.song.time || defaultTime) * 1000;
+        const interval = totalMilliSeconds / offScreen;
+        this.setState({
+            interval
+        });
         console.log('interval', interval);
-            
-    });
-    // console.log('document.documentElement.scrollTopMax', document.documentElement.scrollTopMax)
+        // console.log('document.documentElement.scrollTopMax', document.documentElement.scrollTopMax)
+    }
 
-    return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <AppBar 
-                position="fixed" 
-                className={classes.appBar}
-            >
-                <Toolbar className={classes.toolbar}>
-                    <IconButton edge="start" aria-label="back">
-                        <ArrowLeft style={{ color: "white" }} onClick={() => setSetlist(setlist)}/>
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                        {song.title}
-                    </Typography>
-                    <div 
-                        style={{width: "30%", paddingLeft: "10px", paddingRight: "10px"}}
-                    >
-                        <Slider 
-                            style={{ size: "100px", color: "white" }}
-                            className={classes.slider}
-                            onChange={fontSizeChange} 
-                            aria-labelledby="continuous-slider" 
-                            value={fontSize}
-                        />
-                    </div>
-                    {playing ? 
-                    <IconButton edge="end" aria-label="play">
-                        <Pause 
-                            style={{ color: "white" }}
-                            onClick={stop}
-                        />
-                    </IconButton> :
-                    <IconButton edge="end" aria-label="play">
-                        <PlayArrow 
-                            style={{ color: "white" }}
-                            onClick={start}
-                        />
-                    </IconButton>
-                    }
-                    <IconButton edge="end" aria-label="edit">
-                        <EditIcon 
-                            style={{ color: "white" }}
-                            onClick={() => editSong(song)}
-                        />
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-            <main className={classes.content}>
-                <Typography 
-                    onClick={togglePlay}
-                    className={classes.lyrics}
-                    style={{fontSize: fontSize+'px'}}
-                    display="block"
-                    dangerouslySetInnerHTML={{__html: song.lyrics}} 
-                />
-            </main>
-        </div>
-    )
+    handleBack(){
+        this.state.setSetlist(this.state.setlist);
+    }
+
+    render(){
+        const {classes, song, fontSize, playing, scrollPosition, interval} = this.state;
+        if(playing){
+            window.setTimeout(() => {
+                console.log('Moving to', scrollPosition);
+                window.scroll(0, scrollPosition);
+                if(this.state.scrollPosition >= (document.documentElement.scrollTop + document.documentElement.clientHeight)){
+                    this.stop()
+                    this.setState({
+                        scrollPosition: 0
+                    });  
+                    return;
+                }
+                this.setState({
+                    scrollPosition: scrollPosition+1
+                });  
+            }, interval);
+        }
+
+        return (
+            <div className={classes.root}>
+                <CssBaseline />
+                <AppBar 
+                    position="fixed" 
+                    className={classes.appBar}
+                >
+                    <Toolbar className={classes.toolbar}>
+                        <IconButton edge="start" aria-label="back">
+                            <ArrowLeft style={{ color: "white" }} onClick={this.handleBack.bind(this)}/>
+                        </IconButton>
+                        <Typography variant="h6" noWrap>
+                            {song.title}
+                        </Typography>
+                        <div 
+                            style={{width: "30%", paddingLeft: "10px", paddingRight: "10px"}}
+                        >
+                            <Slider 
+                                style={{ size: "100px", color: "white" }}
+                                className={classes.slider}
+                                onChange={this.fontSizeChange.bind(this)} 
+                                aria-labelledby="continuous-slider" 
+                                value={fontSize}
+                            />
+                        </div>
+                        {playing ? 
+                        <IconButton edge="end" aria-label="play">
+                            <Pause 
+                                style={{ color: "white" }}
+                                onClick={this.stop.bind(this)}
+                            />
+                        </IconButton> :
+                        <IconButton edge="end" aria-label="play">
+                            <PlayArrow 
+                                style={{ color: "white" }}
+                                onClick={this.start.bind(this)}
+                            />
+                        </IconButton>
+                        }
+                        <IconButton edge="end" aria-label="edit">
+                            <EditIcon 
+                                style={{ color: "white" }}
+                                onClick={() => this.state.editSong(song)}
+                            />
+                        </IconButton>
+                    </Toolbar>
+                </AppBar>
+                <main className={classes.content}>
+                    <Typography 
+                        onClick={this.togglePlay.bind(this)}
+                        className={classes.lyrics}
+                        style={{fontSize: fontSize+'px'}}
+                        display="block"
+                        dangerouslySetInnerHTML={{__html: song.lyrics}} 
+                    />
+                </main>
+            </div>
+        )
+    }
 };
+
+export default withStyles(styles, { withTheme: true })(SongPage);
