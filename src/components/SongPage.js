@@ -215,8 +215,7 @@ class SongPage extends React.Component{
                                 style={{textAlign: "center"}}
                             >
                                 <Typography variant="h6" noWrap>
-                                    {song.title} by {song.artist}
-                                    {song.time}
+                                    {song.title} by {song.artist} {song.time}
                                 </Typography>
                             </Grid>
                             <Grid
