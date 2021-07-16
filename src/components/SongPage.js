@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import { grey } from '@material-ui/core/colors';
 
+// let playing = false;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -85,23 +86,14 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
 
     const start = () => {
         setPlaying(true);
+        // playing = true;
     }
 
-    if(playing){
-        window.setTimeout(() => {
-            console.log('Moving to', scrollPosition);
-            window.scroll(0, scrollPosition);
-            if(scrollPosition >= offScreen){
-                setPlaying(false);
-                setScrollPosition(0);  
-                return;
-            }
-            setScrollPosition(scrollPosition+1);  
-        }, interval);
-    }
+    
 
     const stop = () => {
         setPlaying(false);
+        // playing = flase;
     }
 
     const togglePlay = () =>{
@@ -112,17 +104,35 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
         }
     }
     
-    useEffect(() => {
-        window.addEventListener("scroll", event => {
-            // if(!playing){
-            //     // setScrollPosition(event.target.documentElement.scrollTop)
-            // }
-            // console.log('event', event  );
+    if(playing){
+        window.setTimeout(() => {
+            console.log('Moving to', scrollPosition);
+            window.scroll(0, scrollPosition);
+            if(scrollPosition >= offScreen){
+                stop()
+                setScrollPosition(0);  
+                return;
+            }
+            setScrollPosition(scrollPosition+1);  
+        }, interval);
+    }
 
-            // console.log('event.target.documentElement.scrollTop', event.target.documentElement.scrollTop);
-        });
-        setOffScreen(document.documentElement.scrollTopMax);
-        const totalMilliSeconds = parseTime(song.time || "03:00") * 1000;
+    const handleScroll = event => {
+        if(!playing){
+            console.log('setting new scroll location', event.target.documentElement.scrollTop)
+            // setScrollPosition(event.target.documentElement.scrollTop)
+        }
+        // console.log('event', event  );
+
+        // console.log('event.target.documentElement.scrollTop', event.target.documentElement.scrollTop);
+    }
+
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll);
+
+        
+        setOffScreen(document.documentElement.scrollHeight - (document.documentElement.scrollTop + document.documentElement.clientHeight));
+        const totalMilliSeconds = parseTime(song.time || "04:00") * 1000;
         setInterval(totalMilliSeconds / offScreen);
         console.log('interval', interval);
             
