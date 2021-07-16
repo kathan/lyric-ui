@@ -73,7 +73,7 @@ export default function SongEdit(props) {
                     <Typography variant="h6" noWrap>
                         {song ? "Edit "+song.title : "New Song"}
                     </Typography>
-                    <Button onClick={done} color="primary">
+                    <Button onClick={done}>
                         Cancel
                     </Button>
                     <Button 
@@ -114,7 +114,6 @@ export default function SongEdit(props) {
                     style={{width: "30%"}}
                     label="Song Time"
                     type="time"
-                    // className={classes.textField}
                     onChange={event => {
                         setSong({
                             ...song,
@@ -125,12 +124,12 @@ export default function SongEdit(props) {
                         shrink: true,
                     }}
                     defaultValue={song.time || "00:00"}
-                    style={{
-                        "::-webkit-datetime-edit-ampm-field": {
-                            "display": "none",
-                            "color": "transparent"
-                        }
-                    }}
+                    // style={{
+                    //     "::-webkit-datetime-edit-ampm-field": {
+                    //         "display": "none",
+                    //         "color": "transparent"
+                    //     }
+                    // }}
                     // ampm={false}
                     // inputProps={{
                     // step: 300, // 5 min

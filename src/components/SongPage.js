@@ -11,6 +11,9 @@ import Slider from '@material-ui/core/Slider';
 import EditIcon from '@material-ui/icons/Edit';
 import { grey } from '@material-ui/core/colors';
 import { withStyles } from '@material-ui/core/styles';
+import Popover from '@material-ui/core/Popover';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+import { Grid } from '@material-ui/core';
 
 const defaultTime = "04:00";
 // let playing = false;
@@ -32,6 +35,10 @@ const styles = theme => ({
         [theme.breakpoints.up('sm')]: {
           display: 'none',
         },
+    },
+    paper: {
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.background.paper,
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
@@ -71,7 +78,8 @@ class SongPage extends React.Component{
             ...props,
             fontSize: 40,
             playin: false,
-            scrollPosition: 1
+            scrollPosition: 1,
+            openSlider: false,
         };
     }
 
@@ -145,8 +153,22 @@ class SongPage extends React.Component{
         this.state.setSetlist(this.state.setlist);
     }
 
+    handleSliderOpen(event){
+        this.setState({
+            anchorEl: event.currentTarget,
+        });
+    }
+
+    handleSliderClose(){
+        this.setState({
+            anchorEl: null
+        });
+    }
+
     render(){
-        const {classes, song, fontSize, playing, scrollPosition, interval} = this.state;
+        const {anchorEl, classes, song, fontSize, playing, scrollPosition, interval} = this.state;
+        const openSlider = Boolean(anchorEl);
+
         if(playing){
             window.setTimeout(() => {
                 console.log('Moving to', scrollPosition);
@@ -172,43 +194,106 @@ class SongPage extends React.Component{
                     className={classes.appBar}
                 >
                     <Toolbar className={classes.toolbar}>
-                        <IconButton edge="start" aria-label="back">
-                            <ArrowLeft style={{ color: "white" }} onClick={this.handleBack.bind(this)}/>
-                        </IconButton>
-                        <Typography variant="h6" noWrap>
-                            {song.title}
-                        </Typography>
-                        <div 
-                            style={{width: "30%", paddingLeft: "10px", paddingRight: "10px"}}
+                        <Grid
+                            container
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="baseline"
                         >
-                            <Slider 
-                                style={{ size: "100px", color: "white" }}
-                                className={classes.slider}
-                                onChange={this.fontSizeChange.bind(this)} 
-                                aria-labelledby="continuous-slider" 
-                                value={fontSize}
-                            />
-                        </div>
-                        {playing ? 
-                        <IconButton edge="end" aria-label="play">
-                            <Pause 
-                                style={{ color: "white" }}
-                                onClick={this.stop.bind(this)}
-                            />
-                        </IconButton> :
-                        <IconButton edge="end" aria-label="play">
-                            <PlayArrow 
-                                style={{ color: "white" }}
-                                onClick={this.start.bind(this)}
-                            />
-                        </IconButton>
-                        }
-                        <IconButton edge="end" aria-label="edit">
-                            <EditIcon 
-                                style={{ color: "white" }}
-                                onClick={() => this.state.editSong(song)}
-                            />
-                        </IconButton>
+                            <Grid
+                                item={true}
+                                xs
+                                style={{textAlign: "left"}}
+                            >
+                                <IconButton aria-label="back">
+                                    <ArrowLeft style={{ color: "white" }} onClick={this.handleBack.bind(this)}/>
+                                </IconButton>
+                            </Grid>
+                            <Grid
+                                item
+                                xs
+                                style={{textAlign: "center"}}
+                            >
+                                <Typography variant="h6" noWrap>
+                                    {song.title} by {song.artist}
+                                    {song.time}
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                item
+                                xs
+                                style={{textAlign: "center"}}
+                            >
+                                <IconButton 
+                                    style={{color: "white"}}
+                                    variant="contained" 
+                                    color="primary" 
+                                    onClick={this.handleSliderOpen.bind(this)}
+                                >
+                                    <TextFieldsIcon/>
+                                </IconButton>
+                                <Popover
+                                    open={openSlider}
+                                    anchorEl={anchorEl}
+                                    onClose={this.handleSliderClose.bind(this)}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'center',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                    }}
+                                >
+                                    <div className={classes.paper}>
+                                        <Slider 
+                                            min={5}
+                                            style={{ width: "200px"}}
+                                            className={classes.slider}
+                                            onChange={this.fontSizeChange.bind(this)} 
+                                            aria-labelledby="continuous-slider" 
+                                            value={fontSize}
+                                        />
+                                    </div>
+                                </Popover>
+                            </Grid>
+                            <Grid
+                                item
+                                style={{textAlign: "center"}}
+                                xs
+                            >
+                                {playing ? 
+                                <IconButton 
+                                    aria-label="play"
+                                >
+                                    <Pause 
+                                        style={{ color: "white" }}
+                                        onClick={this.stop.bind(this)}
+                                    />
+                                </IconButton> :
+                                <IconButton aria-label="play">
+                                    <PlayArrow 
+                                        style={{ color: "white" }}
+                                        onClick={this.start.bind(this)}
+                                    />
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid
+                                item
+                                xs
+                                style={{textAlign: "right"}}
+                            >
+                                <IconButton 
+                                    aria-label="edit"
+                                >
+                                    <EditIcon 
+                                        style={{ marginLeft: 'auto', color: "white" }}
+                                        onClick={() => this.state.editSong(song)}
+                                    />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.content}>

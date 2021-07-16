@@ -92,7 +92,6 @@ export default function SongsPage( { onClickSong, setlist, returnToSetlistPage, 
                     </Typography>
                     <TextField
                         color="primary"
-                        className={classes.search}
                         label="Search" 
                         variant="filled"
                         onChange={filter}

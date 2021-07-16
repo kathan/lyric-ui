@@ -77,7 +77,6 @@ export default function SetlistsPage(props){
                                 onClick={addSetlist}
                             >
                                 <AddIcon 
-                                    style={{ color: "white" }}
                                 />
                             </IconButton>
                         </Grid>
@@ -93,7 +92,7 @@ export default function SetlistsPage(props){
                         <ListItem onClick={() => onClickSetlist(setlist)}>
                             <Link 
                                 href={`#setlist/${setlist.id}`}
-                                className={classes.link}
+                                //className={classes.link}
                             >
                                 <ListItemText 
                                     primary={setlist.name} 
