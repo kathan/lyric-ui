@@ -70,10 +70,12 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
     const [interval, setInterval] = useState();
 
     const parseTime = time => {
-        const timeParts = time.split(":");
-        const minutes = parseInt(timeParts[0]);
-        const seconds = parseInt(timeParts[1]);
-        return (minutes * 60) + seconds;
+        if(time){
+            const timeParts = time.split(":");
+            const minutes = parseInt(timeParts[0]);
+            const seconds = parseInt(timeParts[1]);
+            return (minutes * 60) + seconds;
+        }
     }
 
     const fontSizeChange = (event, newValue) => {
@@ -120,7 +122,7 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
             // console.log('event.target.documentElement.scrollTop', event.target.documentElement.scrollTop);
         });
         setOffScreen(document.documentElement.scrollTopMax);
-        const totalMilliSeconds = parseTime(song.time) * 1000;
+        const totalMilliSeconds = parseTime(song.time || "03:00") * 1000;
         setInterval(totalMilliSeconds / offScreen);
         console.log('interval', interval);
             
@@ -147,7 +149,6 @@ export default function SongPage({ song, setlist, setSetlist, editSong }){
                         <Slider 
                             style={{ size: "100px", color: "white" }}
                             className={classes.slider}
-                            // valueLabelDisplay="auto"
                             onChange={fontSizeChange} 
                             aria-labelledby="continuous-slider" 
                             value={fontSize}
