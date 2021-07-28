@@ -1,6 +1,6 @@
 import API from './api';
 const setlistUri = 'setlist';
-const setlistSongUri = 'setlistsong';
+const setlistSongUri = 'setlistSong';
 
 const getSetlists = async () => {
     return await API.get(setlistUri);
@@ -18,10 +18,16 @@ const addSongToSetlist = async (setlistId, songId) => {
     return await API.post(setlistSongUri, body);
 };
 
+const updateSongToSetlist = async (setlistId, songId, data) => {
+    const setlistSongPutUri = `${setlistsong}/${setlistId}/${songId}`;
+    return await API.put(setlistSongPutUri, data);
+};
+
 const SetlistService = {
     getSetlists,
     saveSetlist,
     addSongToSetlist,
+    updateSongToSetlist,
 };
 
 export default SetlistService;
