@@ -6,7 +6,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 const theme = createMuiTheme({
     palette: {
         type: 'dark',
-    }
+        primary: {
+            main:"#fff",
+            contrastText: "#fff"
+        },
+    },   
 });
 
 class App extends React.Component{

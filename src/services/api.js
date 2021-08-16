@@ -6,7 +6,7 @@ const config = {
 };
 
 if (process.env.NODE_ENV === 'development') {
-  config.baseURL = 'http://localhost:8080/api';
+  config.baseURL = 'http://localhost:8081/api';
 }
 
 const api = axios.create(config);
